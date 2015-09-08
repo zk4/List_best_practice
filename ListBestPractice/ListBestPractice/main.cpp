@@ -59,10 +59,8 @@ Node* findNode(Node* current, int data)
 
     return  NULL;
 }
-void reverse(Node** current,int step) {
-   
-}
-void reverse(Node** head) {
+
+Node* reverse(Node** head) {
     Node* new_root = NULL;
     Node* next=NULL;
     while (*head) {
@@ -72,9 +70,25 @@ void reverse(Node** head) {
         *head = next;
     }
     *head=new_root;
-    
+    return new_root;
 }
 
+Node* findCircleStart(Node* head)
+{
+    Node *step1,*step2;
+    step1=head;
+    step2=head->next;
+    while (step1) {
+        if(!step2->next)return NULL;
+        step2=step2->next->next;
+        step1=step1->next;
+        if(step1==step2)
+            return  step1;
+       
+    }
+    return NULL;
+
+}
 
 
 
@@ -82,17 +96,27 @@ int main(int argc, const char * argv[]) {
 
     Node*  list=NULL;
  
-    addNodes(&list, 10,1,2,3,4,5,6,7,8,9,10);
+    addNodes(&list, 11,1,2,11,3,4,5,6,7,8,9,10);
     
     
     printf("test delete..\n");
-    deleteNode(&list, 2);
+    deleteNode(&list, 11);
     printList(list);
     
 
-    printf("test reverse..\n");
+    printf("\ntest reverse..\n");
+    printList(reverse(&list));
+    //reverse back
     reverse(&list);
-    printList(list);
+    
+    printf("\nmake ring at 10..\n");
+    findNode(list, 10)->next=findNode(list, 1);
+    auto ringAt=findCircleStart(list);
+    printf("find ring at %d",findCircleStart(list)?ringAt->data:-1);
+    
+    printf("\nbreak ring..\n");
+    findCircleStart(list)->next=NULL;
+    printf("is ring? %s",findCircleStart(list)?"yes":"no");
     
     
     return 0;
