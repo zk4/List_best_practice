@@ -25,21 +25,22 @@ void addNodes(Node** current,int count , ...)
 {
     va_list arg_list;
     va_start (arg_list, count);
-    for(int i=0;i<count;++i)  addNode(current,va_arg(arg_list,int));
+    for(int i=0;i<count;++i,current=&(*current)->next)
+        addNode(current,va_arg(arg_list,int));
+
     va_end (arg_list);
 }
-void printList(Node** current)
+
+
+void printList(Node* current)
 {
-    while (*current)
-    {
-        printf("%d,",(*current)->data);
-        current=&((*current)->next);
-    }
+    for(; current; current=(current->next) )
+        printf("%d,",current->data);
 }
 
 void deleteNode(Node** current, int data)
 {
-    while (*current)
+    for(; *current; current=&((*current)->next) )
     {
         if((*current)->data==data)
         {
@@ -48,28 +49,50 @@ void deleteNode(Node** current, int data)
             *current=rear;
             break;
         }
-        current=&((*current)->next);
     }
 }
 
-Node* findNode(Node** current, int data)
+Node* findNode(Node* current, int data)
 {
-    while (*current) {
-        if((*current)->data==data)return  *current;
-        current=&((*current)->next);
-    }
+     for(; current; current=(current->next) )
+        if(current->data==data)return  current;
+
     return  NULL;
 }
+void reverse(Node** current,int step) {
+   
+}
+void reverse(Node** head) {
+    Node* new_root = NULL;
+    Node* next=NULL;
+    while (*head) {
+        next = (*head)->next;
+        (*head)->next = new_root;
+        new_root = *head;
+        *head = next;
+    }
+    *head=new_root;
+    
+}
+
+
 
 
 int main(int argc, const char * argv[]) {
 
     Node*  list=NULL;
-    addNodes(&list, 7,1,2,3,4,5,6,7);
-
+ 
+    addNodes(&list, 10,1,2,3,4,5,6,7,8,9,10);
     
+    
+    printf("test delete..\n");
     deleteNode(&list, 2);
-    printList(&list);
+    printList(list);
+    
+
+    printf("test reverse..\n");
+    reverse(&list);
+    printList(list);
     
     
     return 0;
